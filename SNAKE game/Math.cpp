@@ -9,9 +9,9 @@ namespace SnakeGame
 		sf::Vector2f scale = { desiredSize.x / spriteRect.width, desiredSize.y / spriteRect.height };
 		sprite.setScale(scale);
 	}
-	void SetSpriteRelativeOrigin(sf::Sprite& sprite, float originX, float originY)
+	void SetSpriteRelativeOrigin(sf::Sprite& sprite, sf::Vector2f origin)
 	{
 		sf::FloatRect spriteRect = sprite.getLocalBounds();
-		sprite.setOrigin(originX * spriteRect.width, originY * spriteRect.height);
+		sprite.setOrigin(origin.x * spriteRect.width, origin.y * spriteRect.height);
 	}
 }

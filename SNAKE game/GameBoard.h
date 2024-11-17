@@ -4,6 +4,35 @@
 
 namespace SnakeGame
 {
+	enum CellState
+	{
+		Empty,
+		SnakeItem,
+		AppleItem,
+		WallItem
+	};
+
+	struct Cell
+	{		
+		CellState state = CellState::Empty;
+		sf::RectangleShape SetShape(int x,int y)
+		{
+			sf::RectangleShape shape;
+			shape.setSize({ CELL_SIZE, CELL_SIZE });
+			shape.setFillColor(sf::Color::Red);
+			shape.setPosition(CELL_SIZE*x,CELL_SIZE*y);
+			return shape;
+		}
+
+		void SetCellState(CellState& currentState)
+		{
+			state = currentState;
+		}
+		CellState GetCellState()
+		{
+			return state;
+		}
+	};
 	struct GameBoard
 	{
 		sf::RectangleShape SetShapeParametr( sf::Vector2f size, sf::Color color,  sf::Vector2f position)
@@ -13,21 +42,11 @@ namespace SnakeGame
 			shape.setFillColor(color);
 			shape.setPosition(position);
 			return shape;
-		}				
-	};
-	enum CellState
-	{
-		Empty,
-		Snake,
-		Apple,
-		Walls
+		}
+		Cell cell;
+		std::vector<std::vector<Cell>> cells;
 	};
 
-	struct Cell
-	{
-		sf::RectangleShape cell;
-		CellState state = CellState::Apple;
-	};
 
 	void InitGameBoard(GameBoard& board);
 	void UpdateGameBoard(GameBoard& board);
