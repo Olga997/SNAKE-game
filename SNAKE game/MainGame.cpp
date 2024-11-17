@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-
 #include "Settings.h"
 #include "Game.h"
 
@@ -8,9 +7,16 @@ using namespace SnakeGame;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(SnakeGame::SCREEN_WIDTH, SnakeGame::SCREEN_HIGHT), "SnakeGame");
+	int seed = (int)time(nullptr);
+	srand(seed);
+
+	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH,SCREEN_HIGHT), "SnakeGame");
 	SnakeGame::Game* game = new SnakeGame::Game();
 	InitGame(*game);
+
+	//Timer
+	sf::Clock gameClock;
+	float lastTime = gameClock.getElapsedTime().asSeconds();
 
 	//Main loop
 	while (window.isOpen())
@@ -20,8 +26,13 @@ int main()
 		{
 			break;
 		}
+		//Calculate time delta
+		float currentTime = gameClock.getElapsedTime().asSeconds();
+		float deltaTime = currentTime - lastTime;
+		lastTime = currentTime;
+
 		//UpdateGame
-		if (UpdateGame(*game))
+		if (UpdateGame(*game, deltaTime))
 		{
 			window.clear();
 

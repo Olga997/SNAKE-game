@@ -1,10 +1,11 @@
 #include "Game.h"
-#include "GameBoard.h"
 
 namespace SnakeGame
 {
 	void InitGame(Game& game)
 	{
+		InitGameBoard(game.board);
+		InitSnake(game.snake);
 	}
 	void HandeleWindowEvents(Game& game, sf::RenderWindow& window)
 	{
@@ -21,14 +22,16 @@ namespace SnakeGame
 		}
 	}
 
-	bool UpdateGame(Game& game)
+	bool UpdateGame(Game& game, float deltaTime)
 	{
+		UpdateSnake(game.snake, deltaTime);
 		return true;
 	}
 
 	void DrawGame(Game& game, sf::RenderWindow& window)
 	{
-
+		DrawGameBoard(game.board, window);
+		DrawSnake(game.snake, window);
 	}
 	void ShutDownGame(Game& game)
 	{
