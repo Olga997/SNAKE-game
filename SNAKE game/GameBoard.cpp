@@ -33,7 +33,7 @@ namespace SnakeGame
 	
 			for (int j = 0; j < NUMBER_CELL; j++)
 			{
-				window.draw(board.cells.)
+				//window.draw(board.cells.)
 			}
 		}
 		

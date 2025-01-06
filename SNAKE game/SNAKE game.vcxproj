@@ -139,6 +139,7 @@
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="PlayingState.cpp" />
     <ClCompile Include="Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +147,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="PlayingState.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Snake.h" />
   </ItemGroup>
