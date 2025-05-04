@@ -39,6 +39,18 @@
     <ClCompile Include="PlayingState.cpp">
       <Filter>Resource Files\GameStates</Filter>
     </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Resource Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Resource Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pause.cpp">
+      <Filter>Resource Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Snake.h">
@@ -60,6 +72,18 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayingState.h">
+      <Filter>Resource Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Resource Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Resource Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
       <Filter>Resource Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>

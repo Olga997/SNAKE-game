@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "Snake.h"
 #include "GameBoard.h"
+#include "Game.h"
 
 
 namespace SnakeGame

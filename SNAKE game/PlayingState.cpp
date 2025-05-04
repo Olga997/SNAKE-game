@@ -1,16 +1,23 @@
 #include "PlayingState.h"
 
+
 namespace SnakeGame
 {
 	void InitPlayingState(PlayingStateData& data, Game& game)
 	{
 		InitSnake(data.snake);
 		InitGameBoard(data.board);
-
 	}
+
 	void HandlePlayingStateWindowEvent(PlayingStateData& data, Game& game, const sf::Event& event)
 	{
-
+		if (event.type == sf::Event::KeyPressed)
+		{
+			if (event.key.code == sf::Keyboard::Escape)
+			{
+				game.
+			}
+		}
 	}
 	void SnakeGame::HandeInput(PlayingStateData& data)
 	{
