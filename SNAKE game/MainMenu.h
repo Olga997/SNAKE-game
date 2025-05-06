@@ -1,12 +1,14 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Menu.h"
+#include "Math.h"
+
 
 namespace SnakeGame
 {
 	struct Game;
 
-	struct GameStateMainMenuData
+	struct MainMenuData
 	{
 		sf::Font font;
 
@@ -14,17 +16,18 @@ namespace SnakeGame
 		MenuItem optionsItem;
 		MenuItem optionsInfiniteApplesItem;
 		MenuItem optionsWithAccelerationItem;
-		MenuItem recordsItem;
+		MenuItem recordsTable;
 		MenuItem exitGameItem;
 		MenuItem yesItem;
 		MenuItem noItem;
 		Menu menu;
 	};
 
-	void InitGameStateMainMenu(GameStateMainMenuData& data, Game& game);
-	void ShutdownGameStateMainMenu(GameStateMainMenuData& data, Game& game);
-	void HandleGameStateMainMenuWindowEvent(GameStateMainMenuData& data, Game& game, const sf::Event& event);
-	void UpdateGameStateMainMenu(GameStateMainMenuData& data, Game& game, float timeDelta);
-	void DrawGameStateMainMenu(GameStateMainMenuData& data, Game& game, sf::RenderWindow& window);
+	void InitMainMenu(MainMenuData& data, Game&game);
+	void HandleMainMenuWindowEvent(MainMenuData& data, Game& game, const sf::Event& event);
+	void UpdateMainMenu(MainMenuData& data, Game& game, float deltaTime);
+	void DrawMainMenu(MainMenuData& data, Game& game, sf::RenderWindow& window);
+	void ShutdownMainMenu(MainMenuData& data, Game& game);
 }
+
 

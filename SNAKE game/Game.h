@@ -1,12 +1,22 @@
 #pragma once
 #include<SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include "PlayingState.h"
 #include "Apple.h"
 #include "Snake.h"
+#include "Settings.h"
+#include <unordered_map>
+
 
 namespace SnakeGame
 {
+	enum class GameSettingsBits : std::uint8_t
+	{
+		infiniteApple = 1 << 0,
+		acceleratePlayer = 1 << 1,
+
+		Default = infiniteApple | acceleratePlayer,
+		Empty = 0
+	};
+
 	enum class GameStateType
 	{
 		None = 0,
@@ -14,6 +24,7 @@ namespace SnakeGame
 		Playing,
 		GameOver,
 		Pause,
+		RecordsTable,
 	};
 
 	struct GameState
@@ -22,7 +33,6 @@ namespace SnakeGame
 		void* data = nullptr;
 		bool isExclusivelyVisible = false;
 	};
-
 	enum class GameStateChangeType
 	{
 		None,
@@ -38,14 +48,16 @@ namespace SnakeGame
 		GameStateType pendingGameStateType = GameStateType::None;
 		int numEatenApples = 0;
 		bool pendingGameStateIsExclusivelyVisible = false;
+
+		GameSettingsBits gameMode = GameSettingsBits::Default;
+		std::map<std::string, int> recordsTable;
 	};
 
-
 	void InitGame(Game& game);
-	void HandeleWindowEvents(Game& game, sf::RenderWindow& window);
+	void HandleWindowEvents(Game& game, sf::RenderWindow& window);
 	bool UpdateGame(Game& game, float deltaTime);
-	void DrawGame(Game& game, sf::RenderWindow&window);
-	void ShutDownGame(Game& game);
+	void DrawGame(Game& game, sf::RenderWindow& window);
+	void ShutdownGame(Game& game);
 
 	void PushGameState(Game& game, GameStateType stateType, bool isExlusivelyVisible);
 	void PopGameState(Game& game);

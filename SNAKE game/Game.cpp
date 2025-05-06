@@ -1,5 +1,11 @@
 #include "Game.h"
-#include <cassert>
+#include <assert.h>
+#include <algorithm>
+#include "PlayingState.h"
+#include "GameOver.h"
+#include "Pause.h"
+#include "MainMenu.h"
+#include "RecordsTable.h"
 
 namespace SnakeGame
 {
@@ -8,10 +14,9 @@ namespace SnakeGame
 		game.gameStateChangeType = GameStateChangeType::None;
 		game.pendingGameStateType = GameStateType::None;
 		game.pendingGameStateIsExclusivelyVisible = false;
-		SwitchGameState(game, GameStateType::Playing);
-
+		SwitchGameState(game, GameStateType::MainMenu);
 	}
-	void HandeleWindowEvents(Game& game, sf::RenderWindow& window)
+	void HandleWindowEvents(Game& game, sf::RenderWindow& window)
 	{
 		//Read event
 		sf::Event event;
@@ -23,11 +28,14 @@ namespace SnakeGame
 				window.close();
 				break;
 			}
+			if (game.gameStateStack.size() > 0)
+			{
+				HandleWindowEventGameState(game, game.gameStateStack.back(), event);
+			}
 		}
 	}
-
 	bool UpdateGame(Game& game, float deltaTime)
-	{		
+	{
 		if (game.gameStateChangeType == GameStateChangeType::Swith)
 		{
 			while (game.gameStateStack.size() > 0)
@@ -60,7 +68,6 @@ namespace SnakeGame
 		}
 		return false;
 	}
-
 	void DrawGame(Game& game, sf::RenderWindow& window)
 	{
 		if (game.gameStateStack.size() > 0)
@@ -80,8 +87,16 @@ namespace SnakeGame
 			}
 		}
 	}
-	void ShutDownGame(Game& game)
+	void ShutdownGame(Game& game)
 	{
+		while (game.gameStateStack.size() > 0)
+		{
+			ShutdownGameState(game, game.gameStateStack.back());
+			game.gameStateStack.pop_back();
+		}
+		game.gameStateChangeType = GameStateChangeType::None;
+		game.pendingGameStateType = GameStateType::None;
+		game.pendingGameStateIsExclusivelyVisible = false;
 	}
 
 	void PushGameState(Game& game, GameStateType stateType, bool isExlusivelyVisible)
@@ -113,31 +128,31 @@ namespace SnakeGame
 			InitPlayingState(*(PlayingStateData*)state.data, game);
 			break;
 		}
-		/*case GameStateType::GameOver:
+		case GameStateType::GameOver:
 		{
-			state.data = new GameStateGameOverData();
-			InitGameOverState(*(GameStateGameOverData*)state.data, game);
+			state.data = new GameOverData();
+			InitGameOverState(*(GameOverData*)state.data, game);
 			break;
 		}
 		case GameStateType::MainMenu:
 		{
-			state.data = new GameStateMainMenuData();
-			InitGameStateMainMenu(*(GameStateMainMenuData*)state.data, game);
+			state.data = new MainMenuData();
+			InitMainMenu(*(MainMenuData*)state.data, game);
 			break;
 		}
 		case GameStateType::Pause:
 		{
-			state.data = new GameStatePauseData();
-			InitGameStatePause(*(GameStatePauseData*)state.data, game);
+			state.data = new PauseData();
+			InitPause(*(PauseData*)state.data, game);
 			break;
 		}
 		case GameStateType::RecordsTable:
 		{
-			state.data = new GameStateRecordsTableData();
-			InitGameStateRecordsTable(*(GameStateRecordsTableData*)state.data, game);
+			state.data = new RecordsTableData();
+			InitRecordsTable(*(RecordsTableData*)state.data, game);
 			break;
 		}
-		*/
+
 		default:
 			assert(false);
 			break;
@@ -152,21 +167,26 @@ namespace SnakeGame
 			HandlePlayingStateWindowEvent(*(PlayingStateData*)state.data, game, event);
 			break;
 		}
-		/*case GameStateType::GameOver:
+		case GameStateType::GameOver:
 		{
-			HandleGameStateGameOverWindowEvent(*(GameStateGameOverData*)state.data, game, event);
+			HandleGameOverWindowEvent(*(GameOverData*)state.data, game, event);
 			break;
 		}
 		case GameStateType::MainMenu:
 		{
-			HandleGameStateMainMenuWindowEvent(*(GameStateMainMenuData*)state.data, game, event);
+			HandleMainMenuWindowEvent(*(MainMenuData*)state.data, game, event);
 			break;
 		}
 		case GameStateType::Pause:
 		{
-			HandleGameStatePauseWindowEvent(*(GameStatePauseData*)state.data, game, event);
+			HandlePauseWindowEvent(*(PauseData*)state.data, game, event);
 			break;
-		}*/
+		}
+		case GameStateType::RecordsTable:
+		{
+			HandleRecordsTableWindowEvent(*(RecordsTableData*)state.data, game, event);
+			break;
+		}
 		default:
 			assert(false);
 			break;
@@ -178,29 +198,29 @@ namespace SnakeGame
 		{
 		case GameStateType::Playing:
 		{
-			UpdatePlayingStateData(*(PlayingStateData*)state.data, game, deltaTime);
+			UpdatePlayingState(*(PlayingStateData*)state.data, game, deltaTime);
 			break;
 		}
-		/*case GameStateType::GameOver:
+		case GameStateType::GameOver:
 		{
-			UpdateGameStateGameOver(*(GameStateGameOverData*)state.data, game, deltaTime);
+			UpdateGameOver(*(GameOverData*)state.data, game, deltaTime);
 			break;
 		}
 		case GameStateType::MainMenu:
 		{
-			UpdateGameStateMainMenu(*(GameStateMainMenuData*)state.data, game, deltaTime);
+			UpdateMainMenu(*(MainMenuData*)state.data, game, deltaTime);
 			break;
 		}
 		case GameStateType::Pause:
 		{
-			UpdateGameStatePause(*(GameStatePauseData*)state.data, game, deltaTime);
+			UpdatePause(*(PauseData*)state.data, game, deltaTime);
 			break;
 		}
 		case GameStateType::RecordsTable:
 		{
-			UpdateGameStateRecordsTable(*(GameStateRecordsTableData*)state.data, game, deltaTime);
+			UpdateRecordsTable(*(RecordsTableData*)state.data, game, deltaTime);
 			break;
-		}*/
+		}
 		default:
 			assert(false);
 			break;
@@ -215,26 +235,26 @@ namespace SnakeGame
 			DrawPlayingState(*(PlayingStateData*)state.data, game, window);
 			break;
 		}
-		/*case GameStateType::GameOver:
+		case GameStateType::GameOver:
 		{
-			DrawGameStateGameOver(*(GameStateGameOverData*)state.data, game, window);
+			DrawGameOver(*(GameOverData*)state.data, game, window);
 			break;
 		}
 		case GameStateType::MainMenu:
 		{
-			DrawGameStateMainMenu(*(GameStateMainMenuData*)state.data, game, window);
+			DrawMainMenu(*(MainMenuData*)state.data, game, window);
 			break;
 		}
 		case GameStateType::Pause:
 		{
-			DrawGameStatePause(*(GameStatePauseData*)state.data, game, window);
+			DrawPause(*(PauseData*)state.data, game, window);
 			break;
 		}
 		case GameStateType::RecordsTable:
 		{
-			DrawGameStateRecordsTable(*(GameStateRecordsTableData*)state.data, game, window);
+			DrawRecordsTable(*(RecordsTableData*)state.data, game, window);
 			break;
-		}*/
+		}
 		default:
 			assert(false);
 			break;
@@ -250,30 +270,30 @@ namespace SnakeGame
 			delete (PlayingStateData*)state.data;
 			break;
 		}
-		/*case GameStateType::GameOver:
+		case GameStateType::GameOver:
 		{
-			ShutdownGameStateGameOver(*(GameStateGameOverData*)state.data, game);
-			delete (GameStateGameOverData*)state.data;
+			ShutdownGameOver(*(GameOverData*)state.data, game);
+			delete (GameOverData*)state.data;
 			break;
 		}
 		case GameStateType::MainMenu:
 		{
-			ShutdownGameStateMainMenu(*(GameStateMainMenuData*)state.data, game);
-			delete (GameStateMainMenuData*)state.data;
+			ShutdownMainMenu(*(MainMenuData*)state.data, game);
+			delete (MainMenuData*)state.data;
 			break;
 		}
 		case GameStateType::Pause:
 		{
-			ShutdownGameStatePause(*(GameStatePauseData*)state.data, game);
-			delete (GameStatePauseData*)state.data;
+			ShutdownPause(*(PauseData*)state.data, game);
+			delete (PauseData*)state.data;
 			break;
 		}
 		case GameStateType::RecordsTable:
 		{
-			ShutdownGameStateRecordsTable(*(GameStateRecordsTableData*)state.data, game);
-			delete (GameStateRecordsTableData*)state.data;
+			ShutdownRecordsTable(*(RecordsTableData*)state.data, game);
+			delete (RecordsTableData*)state.data;
 			break;
-		}*/
+		}
 		default:
 			assert(false);
 			break;

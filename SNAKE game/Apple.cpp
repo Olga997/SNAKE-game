@@ -11,8 +11,8 @@ namespace SnakeGame
 
 		//Init apples sprite
 		apple.sprite.setTexture(apple.texture);
-		SetSpriteSize(apple.sprite, {APPLE_SIZE, APPLE_SIZE});
-		SetSpriteRelativeOrigin(apple.sprite, { 0.5f, 0.5f });
+		SetSpriteSize(apple.sprite, APPLE_SIZE, APPLE_SIZE );
+		SetSpriteRelativeOrigin(apple.sprite, 0.5f, 0.5f );
 	}
 	void DrawApple(Apple& apple, sf::RenderWindow& window)
 	{

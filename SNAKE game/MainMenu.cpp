@@ -1,97 +1,168 @@
-#include "Pause.h"
-#include "Game.h"
+#include "MainMenu.h"
 #include <assert.h>
+#include "Game.h"
+
 
 namespace SnakeGame
 {
-	void InitGameStatePauseMenu(GameStatePauseMenuData& data, Game& game)
+	void InitMainMenu(MainMenuData& data, Game& game)
 	{
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
-		data.background.setFillColor(sf::Color(0, 0, 0, 128)); // Semi-transparent black
-
-		data.titleText.setString("Pause");
-		data.titleText.setFont(data.font);
-		data.titleText.setCharacterSize(48);
-		data.titleText.setFillColor(sf::Color::Red);
-
+		data.menu.rootItem.hintText.setString("Apples Game");
+		data.menu.rootItem.hintText.setFont(data.font);
+		data.menu.rootItem.hintText.setCharacterSize(48);
+		data.menu.rootItem.hintText.setFillColor(sf::Color::Red);
 		data.menu.rootItem.childrenOrientation = Orientation::Vertical;
 		data.menu.rootItem.childrenAlignment = Alignment::Middle;
-		data.menu.rootItem.children.push_back(&data.resumeItem);
-		data.menu.rootItem.children.push_back(&data.exitItem);
+		data.menu.rootItem.childrenSpacing = 10.f;
+		data.menu.rootItem.children.push_back(&data.startGameItem);
+		data.menu.rootItem.children.push_back(&data.optionsItem);
+		data.menu.rootItem.children.push_back(&data.recordsTable);
+		data.menu.rootItem.children.push_back(&data.exitGameItem);
 
-		data.resumeItem.text.setString("Return to game");
-		data.resumeItem.text.setFont(data.font);
-		data.resumeItem.text.setCharacterSize(24);
+		data.startGameItem.text.setString("Start Game");
+		data.startGameItem.text.setFont(data.font);
+		data.startGameItem.text.setCharacterSize(24);
 
-		data.exitItem.text.setString("Exit to main menu");
-		data.exitItem.text.setFont(data.font);
-		data.exitItem.text.setCharacterSize(24);
+		data.optionsItem.text.setString("Options");
+		data.optionsItem.text.setFont(data.font);
+		data.optionsItem.text.setCharacterSize(24);
+		data.optionsItem.hintText.setString("Options");
+		data.optionsItem.hintText.setFont(data.font);
+		data.optionsItem.hintText.setCharacterSize(48);
+		data.optionsItem.hintText.setFillColor(sf::Color::Red);
+		data.optionsItem.childrenOrientation = Orientation::Vertical;
+		data.optionsItem.childrenAlignment = Alignment::Middle;
+		data.optionsItem.childrenSpacing = 10.f;
+		data.optionsItem.children.push_back(&data.optionsInfiniteApplesItem);
+		data.optionsItem.children.push_back(&data.optionsWithAccelerationItem);
+
+		data.optionsInfiniteApplesItem.text.setString("Infinite Apples: On/Off");
+		data.optionsInfiniteApplesItem.text.setFont(data.font);
+		data.optionsInfiniteApplesItem.text.setCharacterSize(24);
+
+		data.optionsWithAccelerationItem.text.setString("With Acceleration: On/Off");
+		data.optionsWithAccelerationItem.text.setFont(data.font);
+		data.optionsWithAccelerationItem.text.setCharacterSize(24);
+
+		data.recordsTable.text.setString("Records Table");
+		data.recordsTable.text.setFont(data.font);
+		data.recordsTable.text.setCharacterSize(24);
+
+		data.exitGameItem.text.setString("Exit Game");
+		data.exitGameItem.text.setFont(data.font);
+		data.exitGameItem.text.setCharacterSize(24);
+		data.exitGameItem.hintText.setString("Are you sure?");
+		data.exitGameItem.hintText.setFont(data.font);
+		data.exitGameItem.hintText.setCharacterSize(48);
+		data.exitGameItem.hintText.setFillColor(sf::Color::Red);
+		data.exitGameItem.childrenOrientation = Orientation::Horizontal;
+		data.exitGameItem.childrenAlignment = Alignment::Middle;
+		data.exitGameItem.childrenSpacing = 10.f;
+		data.exitGameItem.children.push_back(&data.yesItem);
+		data.exitGameItem.children.push_back(&data.noItem);
+
+		data.yesItem.text.setString("Yes");
+		data.yesItem.text.setFont(data.font);
+		data.yesItem.text.setCharacterSize(24);
+
+		data.noItem.text.setString("No");
+		data.noItem.text.setFont(data.font);
+		data.noItem.text.setCharacterSize(24);
 
 		InitMenuItem(data.menu.rootItem);
-		SelectMenuItem(data.menu, &data.resumeItem);
+		SelectMenuItem(data.menu, &data.startGameItem);
 	}
 
-	void ShutdownGameStatePauseMenu(GameStatePauseMenuData& data, Game& game)
+	void HandleMainMenuWindowEvent(MainMenuData& data, Game& game, const sf::Event& event)
 	{
-		// We dont need to free resources here, because they will be freed automatically
-	}
+		if (!data.menu.selectedItem)
+		{
+			return;
+		}
 
-	void HandleGameStatePauseMenuWindowEvent(GameStatePauseMenuData& data, Game& game, const sf::Event& event)
-	{
 		if (event.type == sf::Event::KeyPressed)
 		{
 			if (event.key.code == sf::Keyboard::Escape)
 			{
-				PopGameState(game);
+				CollapseSelectedItem(data.menu);
 			}
-
-			if (data.menu.selectedItem == nullptr)
+			else if (event.key.code == sf::Keyboard::Enter)
 			{
-				return;
-			}
-
-			if (event.key.code == sf::Keyboard::Enter)
-			{
-				if (data.menu.selectedItem == &data.resumeItem)
+				if (data.menu.selectedItem == &data.startGameItem)
 				{
-					PopGameState(game);
+					SwitchGameState(game, GameStateType::Playing);
 				}
-				else if (data.menu.selectedItem == &data.exitItem)
+				else if (data.menu.selectedItem == &data.optionsItem)
 				{
-					SwitchGameState(game, GameStateType::MainMenu);
+					ExpandSelectedItem(data.menu);
+				}
+				else if (data.menu.selectedItem == &data.optionsInfiniteApplesItem)
+				{
+					game.gameMode = (GameSettingsBits)((std::uint8_t)game.gameMode ^ (std::uint8_t)GameSettingsBits::infiniteApple);
+				}
+				else if (data.menu.selectedItem == &data.optionsWithAccelerationItem)
+				{
+					game.gameMode = (GameSettingsBits)((std::uint8_t)game.gameMode ^ (std::uint8_t)GameSettingsBits::acceleratePlayer);
+				}
+				else if (data.menu.selectedItem == &data.recordsTable)
+				{
+					PushGameState(game, GameStateType::RecordsTable, true);
+				}
+				else if (data.menu.selectedItem == &data.exitGameItem)
+				{
+					ExpandSelectedItem(data.menu);
+				}
+				else if (data.menu.selectedItem == &data.yesItem)
+				{
+					SwitchGameState(game, GameStateType::None);
+				}
+				else if (data.menu.selectedItem == &data.noItem)
+				{
+					CollapseSelectedItem(data.menu);
+				}
+				else
+				{
+					ExpandSelectedItem(data.menu);
 				}
 			}
 
 			Orientation orientation = data.menu.selectedItem->parent->childrenOrientation;
-			if (event.key.code == sf::Keyboard::Up)
+			if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Up ||
+				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Left)
 			{
 				SelectPreviousMenuItem(data.menu);
 			}
-			else if (event.key.code == sf::Keyboard::Down)
+			else if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Down ||
+				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Right)
 			{
 				SelectNextMenuItem(data.menu);
 			}
 		}
 	}
-
-	void UpdateGameStatePauseMenu(GameStatePauseMenuData& data, Game& game, float timeDelta)
+	void UpdateMainMenu(MainMenuData& data, Game& game, float deltaTime)
 	{
+		bool isInfiniteApples = ((std::uint8_t)game.gameMode & (std::uint8_t)GameSettingsBits::infiniteApple) != (std::uint8_t)GameSettingsBits::Empty;
+		data.optionsInfiniteApplesItem.text.setString("Infinite Apples: " + std::string(isInfiniteApples ? "On" : "Off"));
 
+		bool isWithAcceleration = ((std::uint8_t)game.gameMode & (std::uint8_t)GameSettingsBits::acceleratePlayer) != (std::uint8_t)GameSettingsBits::Empty;
+		data.optionsWithAccelerationItem.text.setString("With Acceleration: " + std::string(isWithAcceleration ? "On" : "Off"));
 	}
-
-	void DrawGameStatePauseMenu(GameStatePauseMenuData& data, Game& game, sf::RenderWindow& window)
+	void DrawMainMenu(MainMenuData& data, Game& game, sf::RenderWindow& window)
 	{
-		sf::Vector2f viewSize = (sf::Vector2f)window.getView().getSize();
+		sf::Vector2f viewSize = (sf::Vector2f)window.getSize();
 
-		data.background.setSize(viewSize);
-		window.draw(data.background);
+		sf::Text* hintText = &GetCurrentMenuContext(data.menu)->hintText;
+		hintText->setOrigin(GetItemOrigin(*hintText, { 0.5f, 0.f }));
+		hintText->setPosition(viewSize.x / 2.f, 150.f);
+		window.draw(*hintText);
 
-		data.titleText.setOrigin(GetTextOrigin(data.titleText, { 0.5f, 0.f }));
-		data.titleText.setPosition(viewSize.x / 2.f, 100);
-		window.draw(data.titleText);
+		DrawMenu(data.menu, window, viewSize / 2.f, { 0.5f, 0.f });
+	}
+	void ShutdownMainMenu(MainMenuData& data, Game& game)
+	{
 
-		DrawMenu(data.menu, window, window.getView().getCenter(), { 0.5f, 0.f });
 	}
 
 }

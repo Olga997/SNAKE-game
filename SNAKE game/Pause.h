@@ -1,10 +1,10 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
-namespace ApplesGame
+namespace SnakeGame
 {
 	struct Game;
-	struct GameStatePauseData
+	struct PauseData
 	{
 		//Resources
 		sf::Font font;
@@ -12,9 +12,9 @@ namespace ApplesGame
 		sf::RectangleShape modalkaBackground;
 		sf::Text text;
 	};
-	void InitGameStatePause(GameStatePauseData& data, Game& game);
-	void HandleGameStatePauseWindowEvent(GameStatePauseData& data, Game& game, sf::Event& event);
-	void UpdateGameStatePause(GameStatePauseData& data, Game& game, float deltaTime);
-	void DrawGameStatePause(GameStatePauseData& data, Game& game, sf::RenderWindow& window);
-	void ShutdownGameStatePause(GameStatePauseData& data, Game& game);
+	void InitPause(PauseData& data, Game& game);
+	void HandlePauseWindowEvent(PauseData& data, Game& game, sf::Event& event);
+	void UpdatePause(PauseData& data, Game& game, float deltaTime);
+	void DrawPause(PauseData& data, Game& game, sf::RenderWindow& window);
+	void ShutdownPause(PauseData& data, Game& game);
 }

@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\olik_\OneDrive\Documenti\GitHub\SNAKE-game\SFML\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Olala\Documents\GitHub\SNAKE-game\SFML\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\olik_\OneDrive\Documenti\GitHub\SNAKE-game\SFML\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Olala\Documents\GitHub\SNAKE-game\SFML\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;sfml-network-s-d.lib;ws2_32.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
@@ -144,6 +144,8 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="PlayingState.cpp" />
+    <ClCompile Include="RecordsTable.cpp" />
+    <ClCompile Include="Rock.cpp" />
     <ClCompile Include="Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +158,8 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Pause.h" />
     <ClInclude Include="PlayingState.h" />
+    <ClInclude Include="RecordsTable.h" />
+    <ClInclude Include="Rock.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Snake.h" />
   </ItemGroup>

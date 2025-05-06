@@ -21,7 +21,7 @@ int main()
 	//Main loop
 	while (window.isOpen())
 	{
-		HandeleWindowEvents(*game,window);
+		HandleWindowEvents(*game, window);
 		if (!window.isOpen())
 		{
 			break;
@@ -45,7 +45,7 @@ int main()
 			window.close();
 		}
 	}
-	ShutDownGame(*game);
+	ShutdownGame(*game);
 	delete game;
 	game = nullptr;
 	return 0;

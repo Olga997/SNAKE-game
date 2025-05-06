@@ -1,10 +1,10 @@
-#include "GameStatePause.h"
+#include "Pause.h"
 #include <assert.h>
 #include "Game.h"
 
-namespace ApplesGame
+namespace SnakeGame
 {
-	void InitGameStatePause(GameStatePauseData& data, Game& game)
+	void InitPause(PauseData& data, Game& game)
 	{
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
@@ -19,7 +19,7 @@ namespace ApplesGame
 		data.text.setOrigin(GetTextOrigin(data.text, { 0.5f, 0.5f }));
 
 	}
-	void HandleGameStatePauseWindowEvent(GameStatePauseData& data, Game& game, sf::Event& event)
+	void HandlePauseWindowEvent(PauseData& data, Game& game, sf::Event& event)
 	{
 		if (event.type == sf::Event::KeyPressed)
 		{
@@ -33,10 +33,10 @@ namespace ApplesGame
 			}
 		}
 	}
-	void UpdateGameStatePause(GameStatePauseData& data, Game& game, float deltaTime)
+	void UpdatePause(PauseData& data, Game& game, float deltaTime)
 	{
 	}
-	void DrawGameStatePause(GameStatePauseData& data, Game& game, sf::RenderWindow& window)
+	void DrawPause(PauseData& data, Game& game, sf::RenderWindow& window)
 	{
 		sf::Vector2f viewSize = window.getView().getSize();
 		data.modalkaBackground.setPosition(viewSize.x / 2.f, viewSize.y / 2.f);
@@ -45,7 +45,7 @@ namespace ApplesGame
 		data.text.setPosition(viewSize.x / 2.f, viewSize.y / 2.f);
 		window.draw(data.text);
 	}
-	void ShutdownGameStatePause(GameStatePauseData& data, Game& game)
+	void ShutdownPause(PauseData& data, Game& game)
 	{
 	}
 }

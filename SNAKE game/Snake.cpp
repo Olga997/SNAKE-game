@@ -13,13 +13,13 @@ namespace SnakeGame
 
 		//Init snake sprite
 		snake.sprite.setTexture(snake.texture);
-		SetSpriteSize(snake.sprite, { SNAKE_SIZE, SNAKE_SIZE });
-		SetSpriteRelativeOrigin(snake.sprite, { 0.5f, 0.5f });
+		SetSpriteSize(snake.sprite,  SNAKE_SIZE, SNAKE_SIZE );
+		SetSpriteRelativeOrigin(snake.sprite,  0.5f, 0.5f );
 	}
 	void UpdateSnake(Snake& snake, float deltaTime)
 	{
 		//Update player position
-		switch (snake.direction)
+		/*switch (snake.direction)
 		{
 		case SnakeDirection::Right:
 		{
@@ -49,7 +49,7 @@ namespace SnakeGame
 			snake.sprite.setRotation(90.f);
 			break;
 		}
-		}
+		}*/
 	}
 	void DrawSnake(Snake& snake, sf::RenderWindow& window)
 	{
