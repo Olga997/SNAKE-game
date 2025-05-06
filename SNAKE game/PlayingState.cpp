@@ -14,7 +14,7 @@ namespace SnakeGame
 
 		assert(data.appleTexture.loadFromFile(RESOURCES_PATH + "Apple.png"));
 		assert(data.rockTexture.loadFromFile(RESOURCES_PATH + "Rock.png"));
-		assert(data.font.loadFromFile(RESOURCES_PATH + "Roboto-Regular.ttf"));
+		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 		assert(data.eatAppleSoundBuffer.loadFromFile(RESOURCES_PATH + "AppleEat.wav"));
 		assert(data.gameOverSoundBuffer.loadFromFile(RESOURCES_PATH + "Death.wav"));
 
