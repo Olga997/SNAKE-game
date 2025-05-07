@@ -9,7 +9,7 @@ namespace SnakeGame
 	{
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
-		data.menu.rootItem.hintText.setString("Apples Game");
+		data.menu.rootItem.hintText.setString("Snake Game");
 		data.menu.rootItem.hintText.setFont(data.font);
 		data.menu.rootItem.hintText.setCharacterSize(48);
 		data.menu.rootItem.hintText.setFillColor(sf::Color::Red);

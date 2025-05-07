@@ -8,8 +8,8 @@ namespace SnakeGame
 	{
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
-		data.modalkaBackground.setSize({ MODALKA_WIDTH, MODALKA_HIGHT });
-		data.modalkaBackground.setOrigin({ MODALKA_WIDTH / 2,MODALKA_HIGHT / 2 });
+		data.modalkaBackground.setSize({SCREEN_WIDTH/2.f,SCREEN_HEGHT/2.f });
+		data.modalkaBackground.setOrigin({ SCREEN_WIDTH / 2.f / 2,SCREEN_HEGHT / 2.f / 2 });
 		data.modalkaBackground.setFillColor(sf::Color::White);
 
 		data.text.setFont(data.font);

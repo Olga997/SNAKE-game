@@ -10,7 +10,7 @@ int main()
 	int seed = (int)time(nullptr);
 	srand(seed);
 
-	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH,SCREEN_HIGHT), "SnakeGame");
+	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEGHT), "SnakeGame");
 	SnakeGame::Game* game = new SnakeGame::Game();
 	InitGame(*game);
 

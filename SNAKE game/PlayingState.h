@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include "Snake.h"
 #include "GameBoard.h"
 #include "Game.h"

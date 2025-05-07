@@ -8,15 +8,15 @@ namespace SnakeGame
 {
 	void InitPlayingState(PlayingStateData& data, Game& game)
 	{
-		InitSnake(data.snake);
-
-		InitGameBoard(data.board);
+		LoadSnakeTextures(data.snake);
 
 		assert(data.appleTexture.loadFromFile(RESOURCES_PATH + "Apple.png"));
 		assert(data.rockTexture.loadFromFile(RESOURCES_PATH + "Rock.png"));
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 		assert(data.eatAppleSoundBuffer.loadFromFile(RESOURCES_PATH + "AppleEat.wav"));
 		assert(data.gameOverSoundBuffer.loadFromFile(RESOURCES_PATH + "Death.wav"));
+
+		InitGameBoard(data.board);
 
 		InitApple(data.apple);
 				
@@ -45,7 +45,7 @@ namespace SnakeGame
 			}
 		}
 	}
-	void SnakeGame::HandeInput(PlayingStateData& data)
+	void HandeInput(PlayingStateData& data)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
@@ -53,7 +53,7 @@ namespace SnakeGame
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
-			data.snake.direction = SnakeDirection::UP;
+			data.snake.direction = SnakeDirection::Up;
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
@@ -67,7 +67,7 @@ namespace SnakeGame
 	void UpdatePlayingState(PlayingStateData& data, Game& game, float deltaTime)
 	{
 		HandeInput(data);
-		UpdateSnake(data.snake, deltaTime);
+		MoveSnake(data.snake, deltaTime);
 		/*if (CheckSpriteIntersection(*data.snake.head, data.apple)) {
 			data.eatAppleSound.play();
 

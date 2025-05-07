@@ -1,4 +1,3 @@
-#include "Game.h"
 #include <assert.h>
 #include <algorithm>
 #include "PlayingState.h"

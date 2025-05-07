@@ -5,12 +5,11 @@ namespace SnakeGame
 {
 	const std::string RESOURCES_PATH = "Resources/";
 
-	constexpr int SCREEN_WIDTH = 800;
-	constexpr int SCREEN_HIGHT = 600;
-	constexpr unsigned int MODALKA_WIDTH = SCREEN_WIDTH / 2;
-	constexpr unsigned int MODALKA_HIGHT = SCREEN_HIGHT / 2;
+	const unsigned int SCREEN_WIDTH = 800;
+	const unsigned int SCREEN_HEGHT = 600;
 	
 	constexpr float SNAKE_SIZE = 40.f;
+	const unsigned int INITIAL_SNAKE_SIZE = 3;
 	constexpr float INITIAL_SPEED = 100.f;
 
 	constexpr float APPLE_SIZE = 20.f;
