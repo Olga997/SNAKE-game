@@ -2,7 +2,6 @@
 #include "SFML/Graphics.hpp"
 
 
-
 namespace SnakeGame
 {
 	struct Game;
@@ -19,6 +18,7 @@ namespace SnakeGame
 		sf::Text records;
 		sf::Text gameOver;
 		sf::Text info;
+		std::vector<sf::Text> recordsTableTexts;
 	};
 
 	void InitGameOverState(GameOverData& data, Game& game);

@@ -141,7 +141,6 @@
   <ItemGroup>
     <ClCompile Include="Apple.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -150,13 +149,11 @@
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="PlayingState.cpp" />
     <ClCompile Include="RecordsTable.cpp" />
-    <ClCompile Include="Rock.cpp" />
     <ClCompile Include="Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Apple.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Math.h" />
@@ -164,7 +161,6 @@
     <ClInclude Include="Pause.h" />
     <ClInclude Include="PlayingState.h" />
     <ClInclude Include="RecordsTable.h" />
-    <ClInclude Include="Rock.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Snake.h" />
   </ItemGroup>

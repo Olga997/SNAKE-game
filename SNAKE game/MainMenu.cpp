@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 #include <assert.h>
-#include "Game.h"
+
 
 
 namespace SnakeGame
@@ -25,26 +25,41 @@ namespace SnakeGame
 		data.startGameItem.text.setFont(data.font);
 		data.startGameItem.text.setCharacterSize(24);
 
-		data.optionsItem.text.setString("Options");
+		data.optionsItem.text.setString("Game Difficulty");
 		data.optionsItem.text.setFont(data.font);
 		data.optionsItem.text.setCharacterSize(24);
-		data.optionsItem.hintText.setString("Options");
+		data.optionsItem.hintText.setString("Game Difficulty");
 		data.optionsItem.hintText.setFont(data.font);
 		data.optionsItem.hintText.setCharacterSize(48);
 		data.optionsItem.hintText.setFillColor(sf::Color::Red);
 		data.optionsItem.childrenOrientation = Orientation::Vertical;
 		data.optionsItem.childrenAlignment = Alignment::Middle;
 		data.optionsItem.childrenSpacing = 10.f;
-		data.optionsItem.children.push_back(&data.optionsInfiniteApplesItem);
-		data.optionsItem.children.push_back(&data.optionsWithAccelerationItem);
+		data.optionsItem.children.push_back(&data.easyItem);
+		data.optionsItem.children.push_back(&data.normalItem);
+		data.optionsItem.children.push_back(&data.hardItem);
+		data.optionsItem.children.push_back(&data.veryHardItem);
+		data.optionsItem.children.push_back(&data.nightmareItem);
 
-		data.optionsInfiniteApplesItem.text.setString("Infinite Apples: On/Off");
-		data.optionsInfiniteApplesItem.text.setFont(data.font);
-		data.optionsInfiniteApplesItem.text.setCharacterSize(24);
+		data.easyItem.text.setString("Easy");
+		data.easyItem.text.setFont(data.font);
+		data.easyItem.text.setCharacterSize(24);
 
-		data.optionsWithAccelerationItem.text.setString("With Acceleration: On/Off");
-		data.optionsWithAccelerationItem.text.setFont(data.font);
-		data.optionsWithAccelerationItem.text.setCharacterSize(24);
+		data.normalItem.text.setString("Normal");
+		data.normalItem.text.setFont(data.font);
+		data.normalItem.text.setCharacterSize(24);
+
+		data.hardItem.text.setString("Hard");
+		data.hardItem.text.setFont(data.font);
+		data.hardItem.text.setCharacterSize(24);
+
+		data.veryHardItem.text.setString("Very Hard");
+		data.veryHardItem.text.setFont(data.font);
+		data.veryHardItem.text.setCharacterSize(24);
+
+		data.nightmareItem.text.setString("Nightmare");
+		data.nightmareItem.text.setFont(data.font);
+		data.nightmareItem.text.setCharacterSize(24);
 
 		data.recordsTable.text.setString("Records Table");
 		data.recordsTable.text.setFont(data.font);
@@ -98,13 +113,25 @@ namespace SnakeGame
 				{
 					ExpandSelectedItem(data.menu);
 				}
-				else if (data.menu.selectedItem == &data.optionsInfiniteApplesItem)
+				else if (data.menu.selectedItem == &data.easyItem)
 				{
-					game.gameMode = (GameSettingsBits)((std::uint8_t)game.gameMode ^ (std::uint8_t)GameSettingsBits::infiniteApple);
+					game.gameDifficulty = GameDifficulty::Easy;
 				}
-				else if (data.menu.selectedItem == &data.optionsWithAccelerationItem)
+				else if (data.menu.selectedItem == &data.normalItem)
 				{
-					game.gameMode = (GameSettingsBits)((std::uint8_t)game.gameMode ^ (std::uint8_t)GameSettingsBits::acceleratePlayer);
+					game.gameDifficulty = GameDifficulty::Normal;
+				}
+				else if (data.menu.selectedItem == &data.hardItem)
+				{
+					game.gameDifficulty = GameDifficulty::Hard;
+				}
+				else if (data.menu.selectedItem == &data.veryHardItem)
+				{
+					game.gameDifficulty = GameDifficulty::VeryHard;
+				}
+				else if (data.menu.selectedItem == &data.nightmareItem)
+				{
+					game.gameDifficulty = GameDifficulty::Nightmare;
 				}
 				else if (data.menu.selectedItem == &data.recordsTable)
 				{
@@ -129,13 +156,13 @@ namespace SnakeGame
 			}
 
 			Orientation orientation = data.menu.selectedItem->parent->childrenOrientation;
-			if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Up ||
-				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Left)
+			if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::W ||
+				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::A)
 			{
 				SelectPreviousMenuItem(data.menu);
 			}
-			else if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::Down ||
-				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::Right)
+			else if (orientation == Orientation::Vertical && event.key.code == sf::Keyboard::S ||
+				orientation == Orientation::Horizontal && event.key.code == sf::Keyboard::D)
 			{
 				SelectNextMenuItem(data.menu);
 			}
@@ -143,11 +170,7 @@ namespace SnakeGame
 	}
 	void UpdateMainMenu(MainMenuData& data, Game& game, float deltaTime)
 	{
-		bool isInfiniteApples = ((std::uint8_t)game.gameMode & (std::uint8_t)GameSettingsBits::infiniteApple) != (std::uint8_t)GameSettingsBits::Empty;
-		data.optionsInfiniteApplesItem.text.setString("Infinite Apples: " + std::string(isInfiniteApples ? "On" : "Off"));
-
-		bool isWithAcceleration = ((std::uint8_t)game.gameMode & (std::uint8_t)GameSettingsBits::acceleratePlayer) != (std::uint8_t)GameSettingsBits::Empty;
-		data.optionsWithAccelerationItem.text.setString("With Acceleration: " + std::string(isWithAcceleration ? "On" : "Off"));
+		
 	}
 	void DrawMainMenu(MainMenuData& data, Game& game, sf::RenderWindow& window)
 	{

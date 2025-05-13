@@ -1,7 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Game.h"
-#include "Math.h"
 #include "PlayingState.h"
 
 namespace SnakeGame
@@ -13,12 +12,14 @@ namespace SnakeGame
 		//Resources
 		sf::Font font;
 
-		sf::Text records;
+		sf::Text titleText;
+		std::vector<sf::Text> tableTexts;
+		sf::Text hintText;
 	};
 	void InitRecordsTable(RecordsTableData& data, Game& game);
 	void HandleRecordsTableWindowEvent(RecordsTableData& data, Game& game, sf::Event& event);
 	void UpdateRecordsTable(RecordsTableData& data, Game& game, float deltaTime);
+	
 	void DrawRecordsTable(RecordsTableData& data, Game& game, sf::RenderWindow& window);
-	void ShutdownRecordsTable(RecordsTableData& data, Game& game);
-	void GenerateFakeRecordsTable(Game& game);
+	void ShutdownRecordsTable(RecordsTableData& data, Game& game);	
 }

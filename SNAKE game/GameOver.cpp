@@ -1,11 +1,15 @@
 #include "GameOver.h"
 #include <assert.h>
 #include "Game.h"
+#include <assert.h>
+#include <sstream>
+#include "Math.h"
 
 
 
 namespace SnakeGame
 {
+	const char* PLAYER_NAME = "Player";
 	void InitGameOverState(GameOverData& data, Game& game)
 	{
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
@@ -20,6 +24,49 @@ namespace SnakeGame
 		data.info.setFillColor(sf::Color::White);
 		data.info.setString("Press Space to restart game");
 		data.info.setOrigin(GetTextOrigin(data.info, { 0.5f, 0.5f }));
+
+		data.recordsTableTexts.reserve(MAX_RECORDS_TABLE_SIZE);
+
+		std::multimap<int, std::string> sortedRecordsTable;
+		int snakeScores = game.recordsTable[PLAYER_NAME];
+		for (const auto& item : game.recordsTable)
+		{
+			sortedRecordsTable.insert(std::make_pair(item.second, item.first));
+		}
+
+		bool isSnakeInTable = false;
+		auto it = sortedRecordsTable.rbegin();
+		for (int i = 0; i < MAX_RECORDS_TABLE_SIZE && it != sortedRecordsTable.rend(); ++i, ++it) 
+		{
+			data.recordsTableTexts.emplace_back(); 
+			sf::Text& text = data.recordsTableTexts.back();
+
+			
+			std::stringstream sstream;
+			sstream << i + 1 << ". " << it->second << ": " << it->first;
+			text.setString(sstream.str());
+			text.setFont(data.font);
+			text.setCharacterSize(24);
+			if (it->second == PLAYER_NAME)
+			{
+				text.setFillColor(sf::Color::Green);
+				isSnakeInTable = true;
+			}
+			else
+			{
+				text.setFillColor(sf::Color::White);
+			}
+		}
+
+		// If snake is not in table, replace last element with him
+		if (!isSnakeInTable)
+		{
+			sf::Text& text = data.recordsTableTexts.back();
+			std::stringstream sstream;
+			sstream << MAX_RECORDS_TABLE_SIZE << ". " << PLAYER_NAME << ": " << snakeScores;
+			text.setString(sstream.str());
+			text.setFillColor(sf::Color::Green);
+		}
 
 	}
 	void HandleGameOverWindowEvent(GameOverData& data, Game& game, const sf::Event& event)
@@ -48,7 +95,7 @@ namespace SnakeGame
 	void UpdateGameOver(GameOverData& data, Game& game, float deltaTime)
 	{
 		data.timeSinceGameOver += deltaTime;
-		//PushGameState(game, GameStateType::RecordsTable, false);			
+			
 	}
 	void DrawGameOver(GameOverData& data, Game& game, sf::RenderWindow& window)
 	{
@@ -66,11 +113,23 @@ namespace SnakeGame
 		}
 		sf::Vector2f viewSize = window.getView().getSize();
 
-		data.gameOver.setOrigin(GetTextOrigin(data.gameOver, { 0.5f, 0.5f }));
-		data.gameOver.setPosition(viewSize.x / 2.f, viewSize.y / 2.f - 50.f);
+		data.gameOver.setOrigin(GetTextOrigin(data.gameOver, { 0.5f, 1.f }));
+		data.gameOver.setPosition(viewSize.x / 2.f, viewSize.y / 2 - 50.f);
 		window.draw(data.gameOver);
 
-		data.info.setPosition(viewSize.x / 2.f, viewSize.y / 2.f + 250.f);
+		// We need to create new vector here as DrawItemsList needs vector of pointers
+		std::vector<sf::Text*> textsList;
+		textsList.reserve(data.recordsTableTexts.size());
+		for (auto& text : data.recordsTableTexts)
+		{
+			textsList.push_back(&text);
+		}
+
+		sf::Vector2f tablePosition = { viewSize.x / 2, viewSize.y / 2.f };
+		DrawTextList(window, textsList, 10.f, Orientation::Vertical, Alignment::Min, tablePosition, { 0.5f, 0.f });
+
+		data.info.setOrigin(GetTextOrigin(data.info, { 0.5f, 1.f }));
+		data.info.setPosition(viewSize.x / 2.f, viewSize.y - 50.f);
 		window.draw(data.info);
 	}
 	void ShutdownGameOver(GameOverData& data, Game& game)

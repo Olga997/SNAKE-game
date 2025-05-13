@@ -2,6 +2,8 @@
 #include "SFML/Graphics.hpp"
 #include "Menu.h"
 #include "Math.h"
+#include "Game.h"
+
 
 
 namespace SnakeGame
@@ -14,8 +16,11 @@ namespace SnakeGame
 
 		MenuItem startGameItem;
 		MenuItem optionsItem;
-		MenuItem optionsInfiniteApplesItem;
-		MenuItem optionsWithAccelerationItem;
+		MenuItem easyItem;
+		MenuItem normalItem;
+		MenuItem hardItem;
+		MenuItem veryHardItem;
+		MenuItem nightmareItem;
 		MenuItem recordsTable;
 		MenuItem exitGameItem;
 		MenuItem yesItem;

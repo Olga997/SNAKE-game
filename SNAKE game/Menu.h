@@ -1,26 +1,15 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include <list>
+#include "Math.h"
 
 namespace SnakeGame
 {
-	//Text
-	enum class Orientation
-	{
-		Horizontal,
-		Vertical
-	};
-	enum class Alignment
-	{
-		Min, 
-		Middle,
-		Max 
-	};
 	//Menu
 	struct MenuItem
 	{
 		sf::Text text;
-		sf::Text hintText; 
+		sf::Text hintText;
 		Orientation childrenOrientation = Orientation::Vertical;
 		Alignment childrenAlignment = Alignment::Min;
 		float childrenSpacing;
@@ -40,8 +29,7 @@ namespace SnakeGame
 		MenuItem* selectedItem = nullptr;
 	};
 
-	sf::Vector2f GetTextOrigin(const sf::Text& text, const sf::Vector2f& relativePosition);
-	void DrawTextList(sf::RenderWindow& window, const std::vector<sf::Text*>& items, float spacing, Orientation orientation, Alignment alignment, const sf::Vector2f& position, const sf::Vector2f& origin);
+	
 
 	void InitMenuItem(MenuItem& menu);
 	void SelectMenuItem(Menu& menu, MenuItem* item);

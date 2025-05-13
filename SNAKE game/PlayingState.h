@@ -2,9 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"
 #include "Snake.h"
-#include "GameBoard.h"
 #include "Game.h"
-#include "Rock.h"
 #include "Apple.h"
 
 
@@ -21,18 +19,19 @@ namespace SnakeGame
 		sf::SoundBuffer gameOverSoundBuffer;
 
 		// Game data
-		Snake snake;
-		GameBoard board;
+		Snake snake;	
 		Apple apple;
-		std::vector<sf::Sprite> rocks;
 		int numEatenApples = 0;
-
-		//std::vector<Rock> rocks;
+		int score = 0;
 
 		// UI data
+		sf::RectangleShape header;
+		sf::RectangleShape outBoard;
+		sf::RectangleShape inerBoard;
+		sf::Text appleText;
 		sf::Text scoreText;
-		sf::Text inputHintText;
-		sf::RectangleShape background;
+		sf::Text inputHintText;	
+		sf::String diffName = "Easy";
 
 		// Sounds
 		sf::Sound eatAppleSound;

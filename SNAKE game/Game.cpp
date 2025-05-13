@@ -1,3 +1,4 @@
+#include "Game.h"
 #include <assert.h>
 #include <algorithm>
 #include "PlayingState.h"
@@ -10,6 +11,17 @@ namespace SnakeGame
 {
 	void InitGame(Game& game)
 	{
+		int MaxScore = 200;
+
+		game.recordsTable =
+		{
+			{"Kate", GetRandomNumber(0, MaxScore)},
+			{"Max", GetRandomNumber(0, MaxScore)},
+			{"Andru", GetRandomNumber(0, MaxScore)},
+			{"Sara", GetRandomNumber(0, MaxScore)},
+			{"Karen", GetRandomNumber(0, MaxScore)},
+		};
+
 		game.gameStateChangeType = GameStateChangeType::None;
 		game.pendingGameStateType = GameStateType::None;
 		game.pendingGameStateIsExclusivelyVisible = false;

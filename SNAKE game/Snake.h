@@ -1,11 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Settings.h"
+#include "Game.h"
 #include <list>
 #include <array>
 
 namespace SnakeGame
 {
+	struct Game;
+
 	enum class SnakeDirection
 	{
 		Up = 0,
@@ -40,10 +43,11 @@ namespace SnakeGame
 	};
 
 	void LoadSnakeTextures(Snake& snake);
-	float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo);
-	sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo);
+	void SetHeadSprite(SnakeGame::Snake& snake, std::list<sf::Sprite>::iterator it);
+	void SetTailSprite(SnakeGame::Snake& snake, std::list<sf::Sprite>::iterator it);
+	sf::Sprite GetRotationSprite(Snake& snake, SnakeDirection oldDirection, SnakeDirection newDirection);
 	
-	void InitSnake(Snake& snake);
+	void InitSnake(Snake& snake, Game& game);
 	void MoveSnake(Snake& snake, float timeDelta);
 	void GrowSnake(Snake& snake);
 	void DrawSnake(Snake& snake, sf::RenderWindow& window);

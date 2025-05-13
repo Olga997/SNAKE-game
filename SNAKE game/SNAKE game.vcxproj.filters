@@ -30,9 +30,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameBoard.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
     <ClCompile Include="RecordsTable.cpp">
       <Filter>Resource Files\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="Rock.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Snake.h">
@@ -69,9 +63,6 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="Settings.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameBoard.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
@@ -94,9 +85,6 @@
     </ClInclude>
     <ClInclude Include="RecordsTable.h">
       <Filter>Resource Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="Rock.h">
-      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

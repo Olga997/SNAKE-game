@@ -5,11 +5,6 @@
 
 namespace SnakeGame
 {
-	/*const std::string RESOURCES_PATH = "Head";
-	const std::string BODY_TEXTURE_ID = "Body";
-	const std::string BODY_BEND_TEXTURE_ID = "BodyBend";
-	const std::string TAIL_TEXTURE_ID = "Tail";*/
-
 	void LoadSnakeTextures(Snake& snake)
 	{
 		assert(snake.textureHead.loadFromFile(RESOURCES_PATH + "Head.png"));
@@ -66,45 +61,37 @@ namespace SnakeGame
 	sf::Sprite GetRotationSprite(Snake& snake, SnakeDirection oldDirection, SnakeDirection newDirection)
 	{
 		sf::Sprite spriteHeadBend;
-		spriteHeadBend.setTexture(snake.textureHead);
+		spriteHeadBend.setTexture(snake.textureBodyBend);
 		SetSpriteSize(spriteHeadBend, SNAKE_SIZE, SNAKE_SIZE);
 		SetSpriteRelativeOrigin(spriteHeadBend, 0.5f, 0.5f);
 
 		float angle = 0.f;
 		if (oldDirection == SnakeGame::SnakeDirection::Right && newDirection == SnakeGame::SnakeDirection::Up ||
-			oldDirection == SnakeGame::SnakeDirection::Down && newDirection == SnakeGame::SnakeDirection::Left) {
+			oldDirection == SnakeGame::SnakeDirection::Down && newDirection == SnakeGame::SnakeDirection::Left) 
+		{
 			angle = 0.f;
 		}
 		else if (oldDirection == SnakeGame::SnakeDirection::Down && newDirection == SnakeGame::SnakeDirection::Right ||
-			oldDirection == SnakeGame::SnakeDirection::Left && newDirection == SnakeGame::SnakeDirection::Up) {
+			oldDirection == SnakeGame::SnakeDirection::Left && newDirection == SnakeGame::SnakeDirection::Up) 
+		{
 			angle = 90.f;
 		}
 		else if (oldDirection == SnakeGame::SnakeDirection::Left && newDirection == SnakeGame::SnakeDirection::Down ||
-			oldDirection == SnakeGame::SnakeDirection::Up && newDirection == SnakeGame::SnakeDirection::Right) {
+			oldDirection == SnakeGame::SnakeDirection::Up && newDirection == SnakeGame::SnakeDirection::Right) 
+		{
 			angle = 180;
 		}
 		else if (oldDirection == SnakeGame::SnakeDirection::Up && newDirection == SnakeGame::SnakeDirection::Left ||
-			oldDirection == SnakeGame::SnakeDirection::Right && newDirection == SnakeGame::SnakeDirection::Down) {
+			oldDirection == SnakeGame::SnakeDirection::Right && newDirection == SnakeGame::SnakeDirection::Down) 
+		{
 			angle = -90.f;
 		}
 
 		spriteHeadBend.setRotation(angle);
 		return spriteHeadBend;
-	}
+	}	
 
-	float GetManhattanDistanceBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo)
-	{
-		const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
-		return std::fabs(result.x) + std::fabs(result.y);
-	}
-
-	sf::Vector2f GetVectorBetweenSprites(const sf::Sprite& spriteFrom, const sf::Sprite& spriteTo)
-	{
-		const auto result = spriteTo.getPosition() - spriteFrom.getPosition();
-		return result;
-	}
-
-	void InitSnake(Snake& snake)
+	void InitSnake(Snake& snake, Game& game)
 	{
 		sf::Sprite spriteHead;
 		spriteHead.setTexture(snake.textureHead);
@@ -122,9 +109,41 @@ namespace SnakeGame
 
 		snake.head = --snake.body.end();
 		snake.tail = snake.body.begin();
-
-		snake.speed = INITIAL_SPEED;
 		snake.prevDirection = snake.direction = SnakeDirection::Up;
+
+		float speed = 0.f;
+		switch (game.gameDifficulty)
+		{
+		case GameDifficulty::Easy:
+		{
+			speed = INITIAL_SPEED;
+			break;
+		}
+		case GameDifficulty::Normal:
+		{
+			speed = INITIAL_SPEED * 2.f;
+			break;
+		}
+		case GameDifficulty::Hard:
+		{
+			speed = INITIAL_SPEED * 3.f;
+			break;
+		}
+		case GameDifficulty::VeryHard:
+		{
+			speed = INITIAL_SPEED * 4.f;
+			break;
+		}
+		case GameDifficulty::Nightmare:
+		{
+			speed = INITIAL_SPEED * 5.f;
+			break;
+		}
+		default:
+			assert(false);
+			break;
+		}
+		snake.speed = speed;
 	}
 
 	void MoveSnake(Snake& snake, float timeDelta)
@@ -167,15 +186,17 @@ namespace SnakeGame
 
 	void DrawSnake(Snake& snake, sf::RenderWindow& window)
 	{
-		for (auto it = snake.body.begin(); it != snake.head; ++it) {
+		for (auto it = snake.body.begin(); it != snake.head; ++it)
+		{
 			auto nextIt = std::next(it);
 			float width = SNAKE_SIZE, height = GetManhattanDistanceBetweenSprites(*it, *nextIt) - SNAKE_SIZE;
 			float angle = it->getPosition().x != nextIt->getPosition().x ? 90.f : 0.f;
 
-			if (width > 0.f && height > 0.f) {
+			if (width > 0.f && height > 0.f) 
+			{
 				sf::Sprite spriteBody;
-				spriteBody.setTexture(snake.textureHead);
-				SetSpriteSize(spriteBody, SNAKE_SIZE, SNAKE_SIZE);
+				spriteBody.setTexture(snake.textureBody);
+				SetSpriteSize(spriteBody, width, height);
 				SetSpriteRelativeOrigin(spriteBody, 0.5f, 0.5f);
 
 				auto position = (it->getPosition() + nextIt->getPosition()) / 2.f;
@@ -185,11 +206,7 @@ namespace SnakeGame
 			}
 		}
 
-		for (; snake.body.begin() != snake.body.end(); ++snake.body.begin())
-		{
-			window.draw(*snake.body.begin());
-		}
-
+		DrawSprites(snake.body.begin(), snake.body.end(), window);
 	}
 
 	bool HasSnakeCollisionWithRect(const Snake& snake, const sf::FloatRect& rect)
@@ -207,7 +224,8 @@ namespace SnakeGame
 		{
 			forwardPoint.y += SNAKE_SIZE / 2.f;
 		}
-		else {
+		else 
+		{
 			forwardPoint.x -= SNAKE_SIZE / 2.f;
 		}
 

@@ -1,5 +1,6 @@
 #include "PlayingState.h"
 #include "Game.h"
+#include <string>
 #include <assert.h>
 
 
@@ -9,29 +10,86 @@ namespace SnakeGame
 	void InitPlayingState(PlayingStateData& data, Game& game)
 	{
 		LoadSnakeTextures(data.snake);
-
 		assert(data.appleTexture.loadFromFile(RESOURCES_PATH + "Apple.png"));
 		assert(data.rockTexture.loadFromFile(RESOURCES_PATH + "Rock.png"));
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 		assert(data.eatAppleSoundBuffer.loadFromFile(RESOURCES_PATH + "AppleEat.wav"));
 		assert(data.gameOverSoundBuffer.loadFromFile(RESOURCES_PATH + "Death.wav"));
 
-		InitGameBoard(data.board);
+		data.header.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEGHT));
+		data.header.setPosition(0.f, 0.f);
+		data.header.setFillColor(sf::Color(116, 194, 79));
+
+		data.outBoard.setSize(sf::Vector2f(SCREEN_WIDTH, 40.f ));
+		data.outBoard.setPosition(0.f, 0.f);
+		data.outBoard.setFillColor(sf::Color(63, 115, 39));
+
+		data.inerBoard.setSize(sf::Vector2f(SCREEN_WIDTH - 40.f, SCREEN_HEGHT - 80.f));
+		data.inerBoard.setPosition(20.f, 60.f);
+		data.inerBoard.setFillColor(sf::Color(172, 250, 112));
+
+		/*InitGameBoard(data.header, {SCREEN_WIDTH,SCREEN_HEGHT}, sf::Color(116, 194, 79), {0.f,0.f});
+		InitGameBoard(data.outBoard, {SCREEN_WIDTH, 40.f}, sf::Color(63, 115, 39), {0.f,0.f});
+		InitGameBoard(data.inerBoard, { SCREEN_WIDTH - 40.f, SCREEN_HEGHT - 80.f }, sf::Color(172, 250, 112), { 20.f,60.f });*/
+
+		InitSnake(data.snake,game);
 
 		InitApple(data.apple);
+		SetSpriteRandomPosition(data.apple.sprite, data.inerBoard.getGlobalBounds(), data.snake.body);
 				
-		//Init rock
-		/*data.rocks.resize(NUM_ROCK);
-		for (Rock& rock:data.rocks)
-		{
-			InitRock(rock);
-		}*/
 
-		game.numEatenApples = 0;
+		int numEatenApples = 0;
+		int score = 0;
 
+		data.appleText.setFont(data.font);
+		data.appleText.setCharacterSize(24);
+		data.appleText.setFillColor(sf::Color::White);
+		
 		data.scoreText.setFont(data.font);
 		data.scoreText.setCharacterSize(24);
-		data.scoreText.setFillColor(sf::Color::White);
+		data.scoreText.setFillColor(sf::Color::Yellow);
+
+		data.inputHintText.setFont(data.font);
+		data.inputHintText.setCharacterSize(24);
+		data.inputHintText.setFillColor(sf::Color::White);	
+
+		switch (game.gameDifficulty)
+		{
+		case GameDifficulty::Easy:
+		{
+			data.diffName = "Easy";
+			break;
+		}
+		case GameDifficulty::Normal:
+		{
+			data.diffName = "Normal";
+			break;
+		}
+		case GameDifficulty::Hard:
+		{
+			data.diffName = "Hard";
+			break;
+		}
+		case GameDifficulty::VeryHard:
+		{
+			data.diffName = "VeryHard";
+			break;
+		}
+		case GameDifficulty::Nightmare:
+		{
+			data.diffName = "Nightmare";
+			break;
+		}
+		default:
+			assert(false);
+			break;
+		}
+
+		data.inputHintText.setString("Difficulty: " + data.diffName);
+		data.inputHintText.setOrigin(GetTextOrigin(data.inputHintText, { 1.f, 0.f }));
+
+		data.eatAppleSound.setBuffer(data.eatAppleSoundBuffer);
+		data.gameOverSound.setBuffer(data.gameOverSoundBuffer);
 	}
 
 
@@ -68,48 +126,90 @@ namespace SnakeGame
 	{
 		HandeInput(data);
 		MoveSnake(data.snake, deltaTime);
-		/*if (CheckSpriteIntersection(*data.snake.head, data.apple)) {
+
+		if (CheckSpriteIntersection(*data.snake.head, data.apple.sprite)) 
+		{
 			data.eatAppleSound.play();
 
 			GrowSnake(data.snake);
 
-			// Increase eaten apples counter
+		
 			data.numEatenApples++;
 
-			// Move apple to a new random position
-			SetSpriteRandomPosition(data.apple, data.background.getGlobalBounds(), data.snake.body);
-
-			// Increase snake speed
-			if ((std::uint8_t)game.options & (std::uint8_t)GameOptions::WithAcceleration) {
-				data.snake.speed += ACCELERATION;
+			switch (game.gameDifficulty)
+			{
+			case GameDifficulty::Easy:
+			{
+				data.score = data.numEatenApples * 2;
+				break;
 			}
-		}
-		bool isGameFinished = !((std::uint8_t)game.options & (std::uint8_t)GameOptions::InfiniteApples);
+			case GameDifficulty::Normal:
+			{
+				data.score = data.numEatenApples * 4;
+				break;
+			}
+			case GameDifficulty::Hard:
+			{
+				data.score = data.numEatenApples * 6;
+				break;
+			}
+			case GameDifficulty::VeryHard:
+			{
+				data.score = data.numEatenApples * 8;
+				break;
+			}
+			case GameDifficulty::Nightmare:
+			{
+				data.score = data.numEatenApples * 10;
+				break;
+			}
+			default:
+				assert(false);
+				break;
+			}
+			
 
-		if (isGameFinished
-			|| !HasSnakeCollisionWithRect(data.snake, data.background.getGlobalBounds()) // Check collision with screen border
-			|| CheckSnakeCollisionWithHimself(data.snake)		// Check collision with screen border
-			|| FullCheckCollisions(data.rocks.begin(), data.rocks.end(), *data.snake.head)) // Check collision with rocks
+			SetSpriteRandomPosition(data.apple.sprite, data.inerBoard.getGlobalBounds(), data.snake.body);
+
+			data.snake.speed += ACCELERATION;
+			
+		}
+		
+
+		if (!HasSnakeCollisionWithRect(data.snake, data.inerBoard.getGlobalBounds()) || CheckSnakeCollisionWithHimself(data.snake))
 		{
 			data.gameOverSound.play();
-
-			// Find snake in records table and update his score
-			game.recordsTable[PLAYER_NAME] = std::max(game.recordsTable[PLAYER_NAME], data.numEatenApples);
-
+			
+			game.recordsTable[PLAYER_NAME] = std::max(game.recordsTable[PLAYER_NAME], data.score);
 			PushGameState(game, GameStateType::GameOver, false);
 		}
 
-		data.scoreText.setString("Apples eaten: " + std::to_string(data.numEatenApples));*/
+		data.appleText.setString("Apples eaten: " + std::to_string(data.numEatenApples));
+		data.scoreText.setString("Score: " + std::to_string(data.score));
 	}
 
 	
 
 	void DrawPlayingState(PlayingStateData& data, Game& game, sf::RenderWindow& window)
 	{
-		DrawGameBoard(data.board, window);
+		window.draw(data.header);
+		window.draw(data.outBoard);
+		window.draw(data.inerBoard);		
+
 		DrawSnake(data.snake, window);
 		DrawApple(data.apple, window);
-		//DrawRock(data.rocks.begin(), data.rocks.end(), window);
+
+		data.appleText.setOrigin(GetTextOrigin(data.scoreText, { 0.f, 0.f }));
+		data.appleText.setPosition(10.f, 5.f);
+		window.draw(data.appleText);
+
+		data.scoreText.setOrigin(GetTextOrigin(data.scoreText, { 0.f, 0.f }));
+		data.scoreText.setPosition(250.f, 5.f);
+		window.draw(data.scoreText);
+
+		sf::Vector2f viewSize = window.getView().getSize();
+		data.inputHintText.setPosition(viewSize.x - 10.f, 5.f);
+		window.draw(data.inputHintText);
 	}
 	void ShutdownPlayingState(PlayingStateData& data, Game& game)
 	{

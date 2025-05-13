@@ -1,37 +1,46 @@
 #include "RecordsTable.h"
+#include "Math.h"
 #include <assert.h>
+#include <sstream>
 
 namespace SnakeGame
 {
-	void GenerateFakeRecordsTable(Game& game)
-	{
-		int MaxScore = 100;
-		if ((std::uint8_t)game.gameMode & (std::uint8_t)GameSettingsBits::infiniteApple)
-		{
-			MaxScore = 100;
-		}
-		else
-		{
-			MaxScore = game.numEatenApples;
-		}
-		game.recordsTable =
-		{
-			{"Kate", GetRandomNumber(0, MaxScore)},
-			{"Max", GetRandomNumber(0, MaxScore)},
-			{"Andru", GetRandomNumber(0, MaxScore)},
-			{"Sara", GetRandomNumber(0, MaxScore)},
-			{"You", 0},
-		};
-	}
-
 	void InitRecordsTable(RecordsTableData& data, Game& game)
 	{
 		assert(data.font.loadFromFile(RESOURCES_PATH + "Fonts/Roboto-Regular.ttf"));
 
-		data.records.setFont(data.font);
-		data.records.setCharacterSize(30);
-		data.records.setFillColor(sf::Color::White);
-		GenerateFakeRecordsTable(game);
+		data.titleText.setString("RECORDS");
+		data.titleText.setFont(data.font);
+		data.titleText.setFillColor(sf::Color::Red);
+		data.titleText.setCharacterSize(48);
+
+		data.tableTexts.reserve(MAX_RECORDS_TABLE_SIZE);
+
+		std::map<int, std::string> sortedRecordsTable;
+		for (const auto& item : game.recordsTable)
+		{
+			sortedRecordsTable[item.second] = item.first;
+		}
+
+		auto it = sortedRecordsTable.rbegin();
+		for (int i = 0; i < MAX_RECORDS_TABLE_SIZE && it != sortedRecordsTable.rend(); ++i, ++it) 
+		{
+			data.tableTexts.emplace_back(); 
+			sf::Text& text = data.tableTexts.back();
+
+	
+			std::stringstream sstream;
+			sstream << i + 1 << ". " << it->second << ": " << it->first;
+			text.setString(sstream.str());
+			text.setFont(data.font);
+			text.setFillColor(sf::Color::White);
+			text.setCharacterSize(24);
+		}
+
+		data.hintText.setString("Press ESC to return back to main menu");
+		data.hintText.setFont(data.font);
+		data.hintText.setFillColor(sf::Color::White);
+		data.hintText.setCharacterSize(24);
 	}
 
 	void HandleRecordsTableWindowEvent(RecordsTableData& data, Game& game, sf::Event& event)
@@ -47,20 +56,30 @@ namespace SnakeGame
 
 	void UpdateRecordsTable(RecordsTableData& data, Game& game, float deltaTime)
 	{
-		data.records.setString("Records: \n");
-		for (const auto& item : game.recordsTable)
-		{
-			data.records.setString(data.records.getString() + "\n" + item.first + ": " + std::to_string(item.second));
-		}
-		game.recordsTable["You"] = std::max(game.recordsTable["You"], game.numEatenApples);
-		data.records.setOrigin(GetTextOrigin(data.records, { 0.5f, 0.5f }));
+		
 	}
-
+	
 	void DrawRecordsTable(RecordsTableData& data, Game& game, sf::RenderWindow& window)
 	{
 		sf::Vector2f viewSize = window.getView().getSize();
-		data.records.setPosition(viewSize.x / 2.f, viewSize.y / 2.f);
-		window.draw(data.records);
+
+		data.titleText.setOrigin(GetTextOrigin(data.titleText, { 0.5f,0.f }));
+		data.titleText.setPosition(viewSize.x / 2.f, 50.f);
+		window.draw(data.titleText);
+
+		std::vector<sf::Text*> textsList;
+		textsList.reserve(data.tableTexts.size());
+		for (auto& text : data.tableTexts)
+		{
+			textsList.push_back(&text);
+		}
+
+		sf::Vector2f tablePosition = { data.titleText.getGlobalBounds().left, viewSize.y / 2.f };
+		DrawTextList(window, textsList, 10.f, Orientation::Vertical, Alignment::Min, tablePosition, { 0.f, 0.f });
+
+		data.hintText.setOrigin(GetTextOrigin(data.hintText, { 0.5f, 1.f }));
+		data.hintText.setPosition(viewSize.x / 2.f, viewSize.y - 50.f);
+		window.draw(data.hintText);
 	}
 
 	void ShutdownRecordsTable(RecordsTableData& data, Game& game)

@@ -8,13 +8,13 @@
 
 namespace SnakeGame
 {
-	enum class GameSettingsBits : std::uint8_t
+	enum class GameDifficulty
 	{
-		infiniteApple = 1 << 0,
-		acceleratePlayer = 1 << 1,
-
-		Default = infiniteApple | acceleratePlayer,
-		Empty = 0
+		Easy,
+		Normal,
+		Hard,
+		VeryHard,
+		Nightmare
 	};
 
 	enum class GameStateType
@@ -24,7 +24,7 @@ namespace SnakeGame
 		Playing,
 		GameOver,
 		Pause,
-		RecordsTable,
+		RecordsTable
 	};
 
 	struct GameState
@@ -46,11 +46,10 @@ namespace SnakeGame
 		std::vector<GameState> gameStateStack;
 		GameStateChangeType gameStateChangeType = GameStateChangeType::None;
 		GameStateType pendingGameStateType = GameStateType::None;
-		int numEatenApples = 0;
 		bool pendingGameStateIsExclusivelyVisible = false;
 
-		GameSettingsBits gameMode = GameSettingsBits::Default;
-		std::map<std::string, int> recordsTable;
+		GameDifficulty gameDifficulty = GameDifficulty::Easy;
+		std::unordered_map<std::string, int> recordsTable;
 	};
 
 	void InitGame(Game& game);
